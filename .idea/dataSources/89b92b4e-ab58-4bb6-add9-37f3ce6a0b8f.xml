@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - chap17@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+    <schema id="1" name="chap17">
+      <visible>1</visible>
+    </schema>
+    <schema id="2" name="chap13"/>
+    <schema id="3" name="information_schema"/>
+    <schema id="4" name="mysql"/>
+    <schema id="5" name="performance_schema"/>
+    <schema id="6" name="sakila"/>
+    <schema id="7" name="sys"/>
+    <schema id="8" name="world"/>
+    <table id="9" parent="1" name="article"/>
+    <table id="10" parent="1" name="id_sequence"/>
+    <column id="11" parent="9" name="article_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="12" parent="9" name="group_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="13" parent="9" name="sequence_no">
+      <mandatory>1</mandatory>
+      <data-type>char(16)|0</data-type>
+    </column>
+    <column id="14" parent="9" name="posting_date">
+      <mandatory>1</mandatory>
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="15" parent="9" name="read_count">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="16" parent="9" name="writer_name">
+      <mandatory>1</mandatory>
+      <data-type>varchar(20)|0</data-type>
+    </column>
+    <column id="17" parent="9" name="password">
+      <data-type>varchar(10)|0</data-type>
+    </column>
+    <column id="18" parent="9" name="title">
+      <data-type>varchar(100)|0</data-type>
+    </column>
+    <column id="19" parent="9" name="content">
+      <data-type>text|0</data-type>
+    </column>
+    <index id="20" parent="9" name="sequence_no">
+      <columns>sequence_no</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="21" parent="9" name="PRIMARY">
+      <columns>article_id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="22" parent="10" name="sequence_name">
+      <mandatory>1</mandatory>
+      <data-type>varchar(10)|0</data-type>
+    </column>
+    <column id="23" parent="10" name="next_value">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <key id="24" parent="10" name="PRIMARY">
+      <columns>sequence_name</columns>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>
