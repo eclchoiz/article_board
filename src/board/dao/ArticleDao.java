@@ -140,4 +140,25 @@ public class ArticleDao {
             JdbcUtil.close(pstmt);
         }
     }
+
+    public String selectLastSequenceNumber(Connection conn, String searchMaxSeqNum,
+                                           String searchMinSeqNum) throws SQLException{
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            pstmt = conn.prepareStatement("SELECT min(sequence_no) FROM article" +
+                    " WHERE sequence_no < ? AND sequence_no >= ?");
+            pstmt.setString(1, searchMaxSeqNum);
+            pstmt.setString(2, searchMinSeqNum);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            return rs.getString(1);
+        } finally {
+            JdbcUtil.close(rs);
+            JdbcUtil.close(pstmt);
+        }
+    }
+
 }
