@@ -66,7 +66,7 @@ public class ArticleDao {
         article.setSequenceNumber(rs.getString("sequence_no"));
         article.setPostingDate(rs.getTimestamp("posting_date"));
         article.setReadCount(rs.getInt("read_count"));
-        article.setWriteName(rs.getString("writer_name"));
+        article.setWriterName(rs.getString("writer_name"));
         article.setPassword(rs.getString("password"));
         article.setTitle(rs.getString("title"));
         if (readContent) {
@@ -87,8 +87,8 @@ public class ArticleDao {
             pstmt.setInt(1, article.getGroupId());
             pstmt.setString(2, article.getSequenceNumber());
             pstmt.setTimestamp(3, new Timestamp(article.getPostingDate().getTime()));
-            pstmt.setString(4, article.getWriteName());
-            pstmt.setString(5, article.getWriteName());
+            pstmt.setString(4, article.getWriterName());
+            pstmt.setString(5, article.getPassword());
             pstmt.setString(6, article.getTitle());
             pstmt.setString(7, article.getContent());
 
@@ -161,4 +161,29 @@ public class ArticleDao {
         }
     }
 
+    public int update(Connection conn, Article article) throws SQLException {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement("UPDATE article SET title = ?, content = ?" +
+                    " WHERE article_id = ?");
+            pstmt.setString(1, article.getTitle());
+            pstmt.setString(2, article.getContent());
+            pstmt.setInt(3, article.getId());
+
+            return pstmt.executeUpdate();
+        } finally {
+            JdbcUtil.close(pstmt);
+        }
+    }
+
+    public void delete(Connection conn, int articleId) throws SQLException {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement("DELETE FROM article WHERE article_id = ?");
+            pstmt.setInt(1, articleId);
+            pstmt.executeUpdate();
+        } finally {
+            JdbcUtil.close(pstmt);
+        }
+    }
 }

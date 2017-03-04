@@ -1,6 +1,6 @@
 package board.service;
 
-public class ReplyingRequest {
+public class ReplyingRequest extends WritingRequest{
     private int parentArticledId;
 
     public int getParentArticledId() {

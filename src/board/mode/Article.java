@@ -9,7 +9,7 @@ public class Article {
     private String sequenceNumber;
     private Date postingDate;
     private int readCount;
-    private String writeName;
+    private String writerName;
     private String password;
     private String title;
     private String content;
@@ -54,12 +54,12 @@ public class Article {
         this.readCount = readCount;
     }
 
-    public String getWriteName() {
-        return writeName;
+    public String getWriterName() {
+        return writerName;
     }
 
-    public void setWriteName(String writeName) {
-        this.writeName = writeName;
+    public void setWriterName(String writerName) {
+        this.writerName = writerName;
     }
 
     public String getPassword() {
