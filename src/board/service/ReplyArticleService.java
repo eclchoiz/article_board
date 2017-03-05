@@ -1,7 +1,7 @@
 package board.service;
 
 import board.dao.ArticleDao;
-import board.mode.Article;
+import board.model.Article;
 import jdbc.connection.ConnectionProvider;
 import jdbc.loader.JdbcUtil;
 
@@ -12,6 +12,7 @@ import java.util.Date;
 
 public class ReplyArticleService {
     private static ReplyArticleService instance = new ReplyArticleService();
+
     public static ReplyArticleService getInstance() {
         return instance;
     }
@@ -19,8 +20,8 @@ public class ReplyArticleService {
     public ReplyArticleService() {
     }
 
-    public Article reply(ReplyingRequest replyingRequest) throws ArticleNotFondException,
-            CannotReplyArticleException, LastChildAlreadyExistsException{
+    public Article reply(ReplyingRequest replyingRequest) throws ArticleNotFoundException,
+            CannotReplyArticleException, LastChildAlreadyExistsException {
         Connection conn = null;
         Article article = replyingRequest.toArticle();
 
@@ -29,14 +30,14 @@ public class ReplyArticleService {
             conn.setAutoCommit(false);
 
             ArticleDao articleDao = ArticleDao.getInstance();
-            Article parent = articleDao.selectedById(conn, replyingRequest.getParentArticledId());
+            Article parent = articleDao.selectById(conn, replyingRequest.getParentArticleId());
 
             try {
-                checkParent(parent, replyingRequest.getParentArticledId());
+                checkParent(parent, replyingRequest.getParentArticleId());
             } catch (Exception e) {
                 JdbcUtil.rollBack(conn);
-                if (e instanceof ArticleNotFondException) {
-                    throw (ArticleNotFondException) e;
+                if (e instanceof ArticleNotFoundException) {
+                    throw (ArticleNotFoundException) e;
                 } else if (e instanceof CannotReplyArticleException) {
                     throw (CannotReplyArticleException) e;
                 } else if (e instanceof LastChildAlreadyExistsException) {
@@ -76,6 +77,38 @@ public class ReplyArticleService {
         }
     }
 
+    private void checkParent(Article parent, int parentId)
+            throws ArticleNotFoundException, CannotReplyArticleException {
+        if (parent == null) {
+            throw new ArticleNotFoundException("부모글이 존재하지 않음: " + parentId);
+        }
+
+        int parentLevel = parent.getLevel();
+        if (parentLevel == 3) {
+            throw new CannotReplyArticleException(
+                    "마지막 레벨 글에는 답글을 달 수 없습니다.: " + parent.getId());
+        }
+    }
+
+    private String getSearchMinSeqNum(Article parent) {
+        String parentSeqNum = parent.getSequenceNumber();
+        DecimalFormat decimalFormat = new DecimalFormat("0000000000000000");
+        long parentSeqLongValue = Long.parseLong(parentSeqNum);
+        long searchMinLongValue = 0;
+        switch (parent.getLevel()) {
+            case 0:
+                searchMinLongValue = parentSeqLongValue / 1000000L * 1000000L;
+                break;
+            case 1:
+                searchMinLongValue = parentSeqLongValue / 10000L * 10000L;
+                break;
+            case 2:
+                searchMinLongValue = parentSeqLongValue / 100L * 100L;
+                break;
+        }
+        return decimalFormat.format(searchMinLongValue);
+    }
+
     private String getSequenceNumber(Article parent, String lastChildSeq)
             throws LastChildAlreadyExistsException {
         long parentSeqLong = Long.parseLong(parent.getSequenceNumber());
@@ -97,14 +130,14 @@ public class ReplyArticleService {
         if (lastChildSeq == null) {
             sequenceNumber = decimalFormat.format(parentSeqLong - decUnit);
         } else {
-            String orderOfLastChildSeq = lastChildSeq.substring(10, 12);
+            String orderOfLastChildSeq = null;
             if (parentLevel == 0) {
                 orderOfLastChildSeq = lastChildSeq.substring(10, 12);
                 sequenceNumber = lastChildSeq.substring(0, 12) + "9999";
             } else if (parentLevel == 1) {
                 orderOfLastChildSeq = lastChildSeq.substring(12, 14);
                 sequenceNumber = lastChildSeq.substring(0, 14) + "99";
-            }  else if (parentLevel == 2) {
+            } else if (parentLevel == 2) {
                 orderOfLastChildSeq = lastChildSeq.substring(14, 62);
                 sequenceNumber = lastChildSeq;
             }
@@ -113,39 +146,9 @@ public class ReplyArticleService {
                 throw new LastChildAlreadyExistsException("마지막 자식글이 이미 존재합니다.: "
                         + lastChildSeq);
             }
+            long seq = Long.parseLong(sequenceNumber) - decUnit;
+            sequenceNumber = decimalFormat.format(seq);
         }
         return sequenceNumber;
-    }
-
-    private String getSearchMinSeqNum(Article parent) {
-        String parentSeqNum = parent.getSequenceNumber();
-        DecimalFormat decimalFormat = new DecimalFormat("0000000000000000");
-        long parentSeqLongValue = Long.parseLong(parentSeqNum);
-        long searchMinLongValue = 0;
-        switch (parent.getLevel()) {
-            case 0:
-                searchMinLongValue = parentSeqLongValue / 1000000L * 1000000L;
-                break;
-            case 1:
-                searchMinLongValue = parentSeqLongValue / 10000L * 10000L;
-                break;
-            case 2:searchMinLongValue = parentSeqLongValue / 100L * 100L;
-                break;
-        }
-
-        return decimalFormat.format(searchMinLongValue);
-    }
-
-    private void checkParent(Article parent, int parentId)
-            throws ArticleNotFondException, CannotReplyArticleException{
-        if (parent == null) {
-            throw new ArticleNotFondException("부모글이 존재하지 않음: " + parentId);
-        }
-
-        int parentLevel = parent.getLevel();
-        if (parentLevel == 3) {
-            throw new CannotReplyArticleException(
-                    "마지막 레벨 글에는 답글을 달 수 없습니다.: " + parent.getId());
-        }
     }
 }

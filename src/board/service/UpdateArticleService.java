@@ -1,7 +1,7 @@
 package board.service;
 
 import board.dao.ArticleDao;
-import board.mode.Article;
+import board.model.Article;
 import jdbc.connection.ConnectionProvider;
 import jdbc.loader.JdbcUtil;
 
@@ -18,7 +18,7 @@ public class UpdateArticleService {
     }
 
     public Article update(UpdateRequest updateRequest)
-            throws ArticleNotFondException, InvalidPasswordException {
+            throws ArticleNotFoundException, InvalidPasswordException {
         Connection conn = null;
         try {
             conn = ConnectionProvider.getConnection();
@@ -37,9 +37,9 @@ public class UpdateArticleService {
             int updateCount = articleDao.update(conn, updatedArticle);
 
             if (updateCount == 0) {
-                throw new ArticleNotFondException("게시글이 존재하지 않음: " + updateRequest.getArticleId());
+                throw new ArticleNotFoundException("게시글이 존재하지 않음: " + updateRequest.getArticleId());
             }
-            Article article = articleDao.selectedById(conn, updateRequest.getArticleId());
+            Article article = articleDao.selectById(conn, updateRequest.getArticleId());
 
             conn.commit();
 
@@ -47,7 +47,7 @@ public class UpdateArticleService {
         } catch (SQLException e) {
             JdbcUtil.rollBack(conn);
             throw new RuntimeException("DB 에러: " + e.getMessage(), e);
-        } catch (ArticleNotFondException e) {
+        } catch (ArticleNotFoundException e) {
             JdbcUtil.rollBack(conn);
             throw e;
         } catch (InvalidPasswordException e) {

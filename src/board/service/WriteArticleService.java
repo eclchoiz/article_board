@@ -1,7 +1,7 @@
 package board.service;
 
 import board.dao.ArticleDao;
-import board.mode.Article;
+import board.model.Article;
 import jdbc.connection.ConnectionProvider;
 import jdbc.loader.JdbcUtil;
 
@@ -21,7 +21,7 @@ public class WriteArticleService {
     }
 
     public Article write(WritingRequest writingRequest) throws IdGenerationFailedException {
-        int groupId = IdGenerate.getInstance().generateNextId("article");
+        int groupId = IdGenerator.getInstance().generateNextId("article");
         Article article = writingRequest.toArticle();
 
         article.setGroupId(groupId);

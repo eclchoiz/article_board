@@ -15,9 +15,10 @@
         int beginPageNumber = (articleListModel.getRequestPage() - 1) / 10 * 10 + 1;
         int endPageNumber = beginPageNumber + 9;
         if (endPageNumber > articleListModel.getTotalPageCount()) {
-            request.setAttribute("beginPage", beginPageNumber);
-            request.setAttribute("endPage", endPageNumber);
+            endPageNumber = articleListModel.getTotalPageCount();
         }
+        request.setAttribute("beginPage", beginPageNumber);
+        request.setAttribute("endPage", endPageNumber);
     }
 %>
 <jsp:forward page="list_view.jsp"/>

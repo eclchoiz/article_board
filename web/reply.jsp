@@ -1,5 +1,5 @@
-<%@ page import="board.mode.Article" %>
-<%@ page import="board.service.ReadArticleService" %>
+<%@ page import="board.model.Article" %>
+<%@ page import="board.service.ReplyArticleService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     request.setCharacterEncoding("utf8");
@@ -9,7 +9,7 @@
 <%
     String viewPage = null;
     try {
-        Article postedArticle = ReadArticleService.getInstance().reply(replyingRequest);
+        Article postedArticle = ReplyArticleService.getInstance().reply(replyingRequest);
         request.setAttribute("postedArticle", postedArticle);
         viewPage = "reply_success.jsp";
     } catch (Exception e) {

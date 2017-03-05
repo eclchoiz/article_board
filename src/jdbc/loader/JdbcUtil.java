@@ -40,7 +40,7 @@ public class JdbcUtil {
     public static void rollBack(Connection conn) {
         if (conn != null) {
             try {
-                conn.close();
+                conn.rollback();
             } catch (SQLException ex) {
 
             }

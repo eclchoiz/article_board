@@ -7,9 +7,6 @@ import jdbc.loader.JdbcUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * Created by choiz on 2017-03-04.
- */
 public class DeleteArticleService {
 
     private static DeleteArticleService instance = new DeleteArticleService();
@@ -17,10 +14,10 @@ public class DeleteArticleService {
         return instance;
     }
 
-    public DeleteArticleService() {
+    private DeleteArticleService() {
     }
 
-    public void deleteArticle(DeleteRequest deleteRequest) throws ArticleNotFondException, InvalidPasswordException{
+    public void deleteArticle(DeleteRequest deleteRequest) throws ArticleNotFoundException, InvalidPasswordException{
         Connection conn = null;
         try {
             conn = ConnectionProvider.getConnection();
@@ -35,12 +32,12 @@ public class DeleteArticleService {
         } catch (SQLException e) {
             JdbcUtil.rollBack(conn);
             throw new RuntimeException(e);
-        } catch (ArticleNotFondException e) {
+        } catch (ArticleNotFoundException e) {
             JdbcUtil.rollBack(conn);
-            throw new RuntimeException(e);
+            throw e;
         } catch (InvalidPasswordException e) {
             JdbcUtil.rollBack(conn);
-            throw new RuntimeException(e);
+            throw e;
         } finally {
             if (conn != null) {
                 try {

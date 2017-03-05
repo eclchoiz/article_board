@@ -3,7 +3,7 @@
 <%
     response.setHeader("Pragma", "No-cache");
     response.setHeader("Cache-Control", "no-cache");
-    response.setHeader("Cache-Control", "no-cache");
+    response.addHeader("Cache-Control", "no-store");
     response.setDateHeader("Expires", 1L);
 %>
 <html>
@@ -12,10 +12,10 @@
 </head>
 <body>
 <table border="1">
-    <c:if test="${listModel.totalPageCount >0}">
+    <c:if test="${listModel.totalPageCount > 0}">
         <tr>
             <td colspan="5">
-                ${listModel.startRow}-${listModel.endRow}
+                    ${listModel.startRow}-${listModel.endRow}
                 [${listModel.requestPage}/${listModel.totalPageCount}]
 
             </td>
@@ -31,7 +31,7 @@
     </tr>
 
     <c:choose>
-        <c:when test="${listModl.hasArticle==false}">
+        <c:when test="${listModel.hasArticle==false}">
             <tr>
                 <td colspan="5">
                     게시글이 없습니다.
@@ -56,9 +56,8 @@
             </c:forEach>
             <tr>
                 <td colspan="5">
-
-                    <c:if test="${beginPage >10}">
-                        <a href="<c:url value="list.jsp?p=${beginPage-1}"/>">이전</a>
+                    <c:if test="${beginPage > 10}">
+                        <a href="<c:url value="list.jsp?p=${beginPage - 1}"/>">이전</a>
                     </c:if>
                     <c:forEach var="pno" begin="${beginPage}" end="${endPage}">
                         <a href="<c:url value="list.jsp?p=${pno}"/>">[${pno}]</a>

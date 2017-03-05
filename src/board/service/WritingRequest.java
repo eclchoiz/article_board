@@ -1,6 +1,6 @@
 package board.service;
 
-import board.mode.Article;
+import board.model.Article;
 
 public class WritingRequest {
     private String writerName;

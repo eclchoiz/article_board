@@ -1,6 +1,6 @@
 package board.dao;
 
-import board.mode.Article;
+import board.model.Article;
 import jdbc.loader.JdbcUtil;
 
 import java.sql.*;
@@ -103,13 +103,13 @@ public class ArticleDao {
             }
             return -1;
         } finally {
-            JdbcUtil.close(conn);
+            JdbcUtil.close(rs);
             JdbcUtil.close(stmt);
             JdbcUtil.close(pstmt);
         }
     }
 
-    public Article selectedById(Connection conn, int articleId) throws SQLException {
+    public Article selectById(Connection conn, int articleId) throws SQLException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {

@@ -8,17 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by SSENG on 2017-03-03.
- */
-public class IdGenerate {
-    private static IdGenerate instance = new IdGenerate();
+public class IdGenerator {
+    private static IdGenerator instance = new IdGenerator();
 
-    public static IdGenerate getInstance() {
+    public static IdGenerator getInstance() {
         return instance;
     }
 
-    public IdGenerate() {
+    private IdGenerator() {
     }
 
     public int generateNextId(String sequenceName) throws IdGenerationFailedException {
@@ -54,9 +51,8 @@ public class IdGenerate {
                 try {
                     conn.setAutoCommit(true);
                 } catch (SQLException e) {
-                } finally {
-                    JdbcUtil.close(conn);
                 }
+                JdbcUtil.close(conn);
             }
         }
     }

@@ -1,7 +1,7 @@
 package board.service;
 
 import board.dao.ArticleDao;
-import board.mode.Article;
+import board.model.Article;
 import jdbc.connection.ConnectionProvider;
 import jdbc.loader.JdbcUtil;
 
@@ -14,22 +14,22 @@ public class ReadArticleService {
         return instance;
     }
 
-    public ReadArticleService() {
+    private ReadArticleService() {
     }
 
-    public Article readArticle(int articleId) throws ArticleNotFondException {
+    public Article readArticle(int articleId) throws ArticleNotFoundException {
         return selectArticle(articleId, true);
     }
 
-    private Article selectArticle(int articleId, boolean increaseCount) throws ArticleNotFondException{
+    private Article selectArticle(int articleId, boolean increaseCount) throws ArticleNotFoundException {
         Connection conn = null;
         try {
             conn = ConnectionProvider.getConnection();
             ArticleDao articleDao = ArticleDao.getInstance();
-            Article article = articleDao.selectedById(conn, articleId);
+            Article article = articleDao.selectById(conn, articleId);
 
             if (article == null) {
-                throw new ArticleNotFondException("게시글이 존재하지 않음: " + articleId);
+                throw new ArticleNotFoundException("게시글이 존재하지 않음: " + articleId);
             }
             if (increaseCount) {
                 articleDao.increaseReadCount(conn, articleId);
@@ -43,7 +43,7 @@ public class ReadArticleService {
         }
     }
 
-    public Article getArticle(int articleId) throws ArticleNotFondException {
+    public Article getArticle(int articleId) throws ArticleNotFoundException {
         return selectArticle(articleId, false);
     }
 }

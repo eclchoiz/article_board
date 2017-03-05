@@ -1,7 +1,5 @@
 package board.model;
 
-import board.mode.Article;
-
 import java.util.Collections;
 import java.util.List;
 

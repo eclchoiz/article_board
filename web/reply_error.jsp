@@ -11,7 +11,7 @@
     <c:when test="${exceptionType == 'ArticleNotFoundException'}">
         답변을 등록할 게시글이 존재하지 않습니다.
     </c:when>
-    <c:when test="${exceptionType == 'ConnotReplyArticleException'}">
+    <c:when test="${exceptionType == 'CannotReplyArticleException'}">
         답변 글을 등록할 수 없는 게시글입니다.
     </c:when>
     <c:when test="${exceptionType == 'LastChildAlreadyExistsException'}">
@@ -19,6 +19,6 @@
     </c:when>
 </c:choose>
 <br/>
-<a href="<c:url value="list.jsp?p=${param.p}"/> ">목록보기</a>
+<a href="<c:url value='list.jsp?p=${param.p}'/> ">목록보기</a>
 </body>
 </html>

@@ -1,13 +1,13 @@
 package board.service;
 
 public class ReplyingRequest extends WritingRequest{
-    private int parentArticledId;
+    private int parentArticleId;
 
-    public int getParentArticledId() {
-        return parentArticledId;
+    public int getParentArticleId() {
+        return parentArticleId;
     }
 
-    public void setParentArticledId(int parentArticledId) {
-        this.parentArticledId = parentArticledId;
+    public void setParentArticleId(int parentArticleId) {
+        this.parentArticleId = parentArticleId;
     }
 }

@@ -1,8 +1,5 @@
 package board.service;
 
-/**
- * Created by choiz on 2017-03-04.
- */
 public class DeleteRequest {
 
     private int articleId;

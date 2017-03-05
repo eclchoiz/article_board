@@ -1,7 +1,7 @@
 package board.service;
 
 import board.dao.ArticleDao;
-import board.mode.Article;
+import board.model.Article;
 import board.model.ArticleListModel;
 import jdbc.connection.ConnectionProvider;
 import jdbc.loader.JdbcUtil;
@@ -10,9 +10,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Created by SSENG on 2017-03-02.
- */
 public class ListArticleService {
     private static ListArticleService instance = new ListArticleService();
 
@@ -24,7 +21,7 @@ public class ListArticleService {
 
     public ArticleListModel getArticleList(int requestPageNumber) {
         if (requestPageNumber < 0) {
-            throw new IllegalArgumentException("page number <0 : " + requestPageNumber);
+            throw new IllegalArgumentException("page number < 0 : " + requestPageNumber);
         }
         ArticleDao articleDao = ArticleDao.getInstance();
         Connection conn = null;
